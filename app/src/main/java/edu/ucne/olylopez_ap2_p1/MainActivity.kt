@@ -11,6 +11,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
+import edu.ucne.olylopez_ap2_p1.presentation.navigation.Parcial1NavHost
 import edu.ucne.olylopez_ap2_p1.ui.theme.OlyLopez_AP2_P1Theme
 
 class MainActivity : ComponentActivity() {
@@ -19,12 +21,9 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             OlyLopez_AP2_P1Theme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+                val navHost = rememberNavController()
+                Parcial1NavHost(navHost)
+
             }
         }
     }
