@@ -43,22 +43,22 @@ fun ServicioScreen(
     viewModel.servicios.collectAsStateWithLifecycle()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(8.dp)
-            ) {
-                ServicioBory(
-                    uiState = uiState,
-                    onDescripcionChanged = viewModel::onDescripcionChanged,
-                    onPrecioChanged = viewModel::onPrecioChanged,
-                    onSaveServicio = { viewModel.saveServicio() },
-                    onNewServicio = {viewModel.newServicio()},
-                    onValidation = viewModel::validation,
-                    navController = navController
-                )
-            }
-        }
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(8.dp)
+    ) {
+        ServicioBory(
+            uiState = uiState,
+            onDescripcionChanged = viewModel::onDescripcionChanged,
+            onPrecioChanged = viewModel::onPrecioChanged,
+            onSaveServicio = { viewModel.saveServicio() },
+            onNewServicio = {viewModel.newServicio()},
+            onValidation = viewModel::validation,
+            navController = navController
+        )
+    }
+}
 
 
 @Composable
