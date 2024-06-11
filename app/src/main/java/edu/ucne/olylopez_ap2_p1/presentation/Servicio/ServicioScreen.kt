@@ -46,7 +46,7 @@ fun ServicioScreen(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(4.dp)
+                    .padding(8.dp)
             ) {
                 ServicioBory(
                     uiState = uiState,
@@ -84,7 +84,9 @@ fun ServicioBory(
                 .padding(innerPadding)
                 .padding(8.dp)
         ) {
-
+            ElevatedCard(
+                modifier = Modifier
+            ) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -177,7 +179,7 @@ fun ServicioBory(
                             )
                             Text("Guardar")
                         }
-
+                    }
                 }
             }
         }
