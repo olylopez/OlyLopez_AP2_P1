@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     id("com.google.devtools.ksp")
     alias(libs.plugins.kotlinx.serialization)
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -53,6 +54,11 @@ android {
 
 dependencies {
 
+    //HILT
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.android.compiler)
+
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.runtime.compose)
@@ -91,5 +97,5 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-    implementation("com.google.android.material:material:1.5.0")
+    implementation(libs.material.v150)
 }
