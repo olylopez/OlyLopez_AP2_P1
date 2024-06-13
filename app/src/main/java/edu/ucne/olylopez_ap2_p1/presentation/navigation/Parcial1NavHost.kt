@@ -13,7 +13,9 @@ import edu.ucne.olylopez_ap2_p1.data.local.database.ServicioDb
 import edu.ucne.olylopez_ap2_p1.presentation.Servicio.ServicioScreen
 
 @Composable
-fun Parcial1NavHost(navHostController: NavHostController) {
+fun Parcial1NavHost(
+    navHostController: NavHostController,
+    repository: ServicioRepository) {
    /* NavHost(
         navController = navHostController,
         startDestination = Screen.ServicioList

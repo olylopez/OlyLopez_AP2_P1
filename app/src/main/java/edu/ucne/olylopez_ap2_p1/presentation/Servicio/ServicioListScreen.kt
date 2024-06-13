@@ -83,14 +83,14 @@ fun ServicioTecListBody(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(4.dp)
+            .padding(8.dp)
 
     ) {
         ElevatedCard(
                 modifier = Modifier
                 ) {
             Row(
-                modifier = Modifier.padding(4.dp)
+                modifier = Modifier.padding(8.dp)
             ) {
 
                 Text(
