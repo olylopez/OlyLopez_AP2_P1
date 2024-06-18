@@ -13,11 +13,13 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -25,12 +27,14 @@ import androidx.compose.runtime.remember
 
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import edu.ucne.olylopez_ap2_p1.presentation.navigation.Screen
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ServicioScreen(
     viewModel: ServicioViewModel,
@@ -38,20 +42,36 @@ fun ServicioScreen(
 ){
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     viewModel.servicios.collectAsStateWithLifecycle()
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(8.dp)
-    ) {
-        ServicioBory(
-            uiState = uiState,
-            onDescripcionChanged = viewModel::onDescripcionChanged,
-            onPrecioChanged = viewModel::onPrecioChanged,
-            onSaveServicio = { viewModel.saveServicio() },
-            onNewServicio = {viewModel.newServicio()},
-            onValidation = viewModel::validation,
-            navController = navController
-        )
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        text = "Registro de Servicios",
+                        modifier = Modifier.fillMaxWidth(),
+                        textAlign = TextAlign.Center
+                    )
+                }
+            )
+        }
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(innerPadding)
+                .padding(4.dp)
+        ) {
+            ServicioBory(
+                uiState = uiState,
+                onDescripcionChanged = viewModel::onDescripcionChanged,
+                onPrecioChanged = viewModel::onPrecioChanged,
+                onSaveServicio = { viewModel.saveServicio() },
+                onNewServicio = { viewModel.newServicio() },
+                onValidation = viewModel::validation,
+                navController = navController
+            )
+        }
     }
 }
 

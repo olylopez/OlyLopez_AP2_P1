@@ -29,6 +29,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import edu.ucne.olylopez_ap2_p1.data.local.entities.ServicioEntity
@@ -48,7 +49,9 @@ fun ServicioListScreen(
         topBar = {
             TopAppBar(
                 title = {
-                    Text("Lista de Servicios")
+                    Text("Lista de Servicios",
+                        modifier = Modifier.fillMaxWidth(),
+                        textAlign = TextAlign.Center)
                 }
             )
         }
