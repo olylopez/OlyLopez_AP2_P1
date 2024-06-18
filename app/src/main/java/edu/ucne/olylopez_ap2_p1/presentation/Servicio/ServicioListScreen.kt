@@ -41,7 +41,6 @@ fun ServicioListScreen(
     viewModel: ServicioViewModel,
     onVerServicio: (ServicioEntity) -> Unit,
     onAddServicio: () -> Unit,
-    onDeleteServicio: (ServicioEntity) -> Unit,
     navController: NavHostController
 ) {
     val servicios by viewModel.servicios.collectAsStateWithLifecycle()
@@ -62,9 +61,9 @@ fun ServicioListScreen(
         ) {
             ServicioTecListBody(
                 servicio = servicios,
-                onAddServicio= onAddServicio,
+                onAddServicio = onAddServicio,
                 onVerServicio = onVerServicio,
-                onDeleteServicio = onDeleteServicio
+                onDeleteServicio = { servicio -> viewModel.deleteServicio(servicio) }
             )
 
         }

@@ -4,13 +4,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
@@ -47,37 +40,12 @@ class MainActivity : ComponentActivity() {
         setContent {
             OlyLopez_AP2_P1Theme {
                 val navHostController = rememberNavController()
-                NavHost(
-                    navController = navHostController,
-                    startDestination = Screen.ServicioList
-
-                ) {
-                    composable<Screen.ServicioList>{
-                        ServicioListScreen(
-                            viewModel = viewModel { ServicioViewModel(repository, 0) },
-                            onDeleteServicio = { servicio -> deleteServicio(servicio)},
-                            onVerServicio =  {
-                                navHostController.navigate(Screen.ServicioRegistro(it.servicioId ?:0))
-                            },
-                            onAddServicio = {navHostController.navigate(Screen.ServicioRegistro(0))
-                            },
-                            navController =navHostController
-                        )
-                    }
-                    composable<Screen.ServicioRegistro>{
-                        val args = it.toRoute<Screen.ServicioRegistro>()
-                        ServicioScreen(viewModel = viewModel { ServicioViewModel(repository, args.servicioId) },
-                            navController = navHostController)
-                    }
-                }
+                Parcial1NavHost(
+                    navHostController = navHostController,
+                    repository = repository
+                )
 
             }
-        }
-    }
-    private fun deleteServicio(servicio: ServicioEntity) {
-        val servicioId = servicio.servicioId ?: return
-        lifecycleScope.launch(Dispatchers.IO) {
-            servicioDb.servicioDao().deleteById(servicioId)
         }
     }
 }

@@ -12,27 +12,24 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
-import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import edu.ucne.olylopez_ap2_p1.presentation.navigation.Screen
-import kotlinx.coroutines.launch
-import java.util.Date
+
 
 @Composable
 fun ServicioScreen(
@@ -41,24 +38,22 @@ fun ServicioScreen(
 ){
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     viewModel.servicios.collectAsStateWithLifecycle()
-    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(8.dp)
-            ) {
-                ServicioBory(
-                    uiState = uiState,
-                    onDescripcionChanged = viewModel::onDescripcionChanged,
-                    onPrecioChanged = viewModel::onPrecioChanged,
-                    onSaveServicio = { viewModel.saveServicio() },
-                    onNewServicio = {viewModel.newServicio()},
-                    onValidation = viewModel::validation,
-                    navController = navController
-                )
-            }
-        }
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(8.dp)
+    ) {
+        ServicioBory(
+            uiState = uiState,
+            onDescripcionChanged = viewModel::onDescripcionChanged,
+            onPrecioChanged = viewModel::onPrecioChanged,
+            onSaveServicio = { viewModel.saveServicio() },
+            onNewServicio = {viewModel.newServicio()},
+            onValidation = viewModel::validation,
+            navController = navController
+        )
+    }
+}
 
 
 @Composable
@@ -171,13 +166,15 @@ fun ServicioBory(
                                     totalInvalido = uiState.precioError
                                 }
                             },
-                            modifier = Modifier.weight(1f) // Usa weight para que ambos botones compartan el espacio disponible
+                            modifier = Modifier.weight(1f)
                         ) {
-                            Icon(
+                            Icon(imageVector = Icons.Default.Person, contentDescription = "save")
+                            Text(text = "Guardar")
+                            /*Icon(
                                 imageVector = Icons.Default.Person,
-                                contentDescription = "save button"
+                                contentD1escription = "save button"
                             )
-                            Text("Guardar")
+                            Text("Guardar")*/
                         }
                     }
                 }

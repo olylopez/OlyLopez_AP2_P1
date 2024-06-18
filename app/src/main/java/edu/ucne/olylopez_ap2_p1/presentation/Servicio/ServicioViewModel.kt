@@ -6,11 +6,9 @@ import edu.ucne.olylopez_ap2_p1.data.local.entities.ServicioEntity
 import edu.ucne.olylopez_ap2_p1.repository.ServicioRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.util.Date
 
 class ServicioViewModel(private val repository: ServicioRepository,
                            private val servicioId: Int) : ViewModel()
@@ -27,7 +25,11 @@ class ServicioViewModel(private val repository: ServicioRepository,
         )
 
 
-
+    fun deleteServicio(servicio: ServicioEntity) {
+        viewModelScope.launch {
+            servicio.servicioId?.let { repository.deleteById(it) }
+        }
+    }
 
     fun onDescripcionChanged(descripcion: String) {
         uiState.update {

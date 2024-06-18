@@ -6,41 +6,45 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
+import edu.ucne.olylopez_ap2_p1.data.local.entities.ServicioEntity
 import edu.ucne.olylopez_ap2_p1.presentation.Servicio.ServicioListScreen
+import edu.ucne.olylopez_ap2_p1.presentation.Servicio.ServicioScreen
 import edu.ucne.olylopez_ap2_p1.presentation.Servicio.ServicioViewModel
 import edu.ucne.olylopez_ap2_p1.repository.ServicioRepository
-import edu.ucne.olylopez_ap2_p1.data.local.database.ServicioDb
-import edu.ucne.olylopez_ap2_p1.presentation.Servicio.ServicioScreen
 
 @Composable
 fun Parcial1NavHost(
     navHostController: NavHostController,
-    repository: ServicioRepository) {
-   /* NavHost(
+    repository: ServicioRepository
+) {
+    NavHost(
         navController = navHostController,
         startDestination = Screen.ServicioList
-
     ) {
-        composable<Screen.ServicioList>{
+        composable<Screen.ServicioList> {
             ServicioListScreen(
                 viewModel = viewModel { ServicioViewModel(repository, 0) },
-                onDeleteServicio = { },
-                onVerServicio =  {
-                    navHostController.navigate(Screen.ServicioRegistro(it.servicioId ?:0))
+                onVerServicio = {
+                    navHostController.navigate(Screen.ServicioRegistro(it.servicioId ?: 0))
                 },
-                onAddServicio = {navHostController.navigate(Screen.ServicioRegistro(0))
+                onAddServicio = {
+                    navHostController.navigate(Screen.ServicioRegistro(0))
                 },
-                navController =navHostController
+                navController = navHostController
             )
         }
-        composable<Screen.ServicioRegistro>{
+        composable<Screen.ServicioRegistro> {
             val args = it.toRoute<Screen.ServicioRegistro>()
-            ServicioScreen(viewModel = viewModel { ServicioViewModel(repository, args.servicioId) },
-                navController = navHostController)
+            ServicioScreen(
+                viewModel = viewModel { ServicioViewModel(repository, args.servicioId) },
+                navController = navHostController
+            )
         }
-    }*/
-
+    }
 }
+
+
+
 
 
 

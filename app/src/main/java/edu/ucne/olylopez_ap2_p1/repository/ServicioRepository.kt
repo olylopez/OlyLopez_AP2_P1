@@ -7,4 +7,5 @@ class ServicioRepository(private val servicioDao: ServicioDao) {
     suspend fun saveServicio(servicio: ServicioEntity) = servicioDao.save(servicio)
     fun getServicio() = servicioDao.getAll()
     suspend fun getServicio(id: Int) = servicioDao.find(id)
+    suspend fun deleteById(servicioId: Int) = servicioDao.deleteById(servicioId)
 }
