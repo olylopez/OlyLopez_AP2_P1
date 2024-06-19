@@ -31,10 +31,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import edu.ucne.olylopez_ap2_p1.data.local.entities.ServicioEntity
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import edu.ucne.olylopez_ap2_p1.presentation.navigation.AddButtom
+import edu.ucne.olylopez_ap2_p1.presentation.navigation.NavigationDrawer
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -45,30 +46,35 @@ fun ServicioListScreen(
     navController: NavHostController
 ) {
     val servicios by viewModel.servicios.collectAsStateWithLifecycle()
-    Scaffold(modifier = Modifier.fillMaxSize(),
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text("Lista de Servicios",
-                        modifier = Modifier.fillMaxWidth(),
-                        textAlign = TextAlign.Center)
-                }
-            )
-        }
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    NavigationDrawer(navController = navController, drawerState = drawerState) {
+        Scaffold(modifier = Modifier.fillMaxSize(),
+            topBar = {
+                TopAppBar(
+                    title = {
+                        Text(
+                            "Lista de Servicios",
+                            modifier = Modifier.fillMaxWidth(),
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                )
+            }
         ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(it)
-                .padding(8.dp)
-        ) {
-            ServicioTecListBody(
-                servicio = servicios,
-                onAddServicio = onAddServicio,
-                onVerServicio = onVerServicio,
-                onDeleteServicio = { servicio -> viewModel.deleteServicio(servicio) }
-            )
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(it)
+                    .padding(8.dp)
+            ) {
+                ServicioTecListBody(
+                    servicio = servicios,
+                    onAddServicio = onAddServicio,
+                    onVerServicio = onVerServicio,
+                    onDeleteServicio = { servicio -> viewModel.deleteServicio(servicio) }
+                )
 
+            }
         }
     }
 }

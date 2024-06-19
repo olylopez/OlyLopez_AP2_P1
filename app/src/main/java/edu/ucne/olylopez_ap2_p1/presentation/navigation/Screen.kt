@@ -9,6 +9,7 @@ sealed class Screen {
     @Serializable
     data class ServicioRegistro(val servicioId: Int) : Screen()
 
-
+    @Serializable
+    object ApiList : Screen()
 }
 
