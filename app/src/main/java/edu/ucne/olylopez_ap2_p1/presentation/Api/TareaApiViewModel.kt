@@ -3,10 +3,8 @@ package edu.ucne.olylopez_ap2_p1.presentation.Api
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import edu.ucne.olylopez_ap2_p1.data.remote.dto.TareasDto
-import edu.ucne.olylopez_ap2_p1.data.remote.dto.UsersDto
 import edu.ucne.olylopez_ap2_p1.repository.Resource
 import edu.ucne.olylopez_ap2_p1.repository.TareaRepository
-import edu.ucne.olylopez_ap2_p1.repository.UsersRepository
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.onEach
@@ -61,7 +59,7 @@ data class TareasApiUIState(
     val isLoading: Boolean = false,
     val errorMessage: String? = null
 )
-fun TareasApiUIState.toEntity() = UsersDto(
+fun TareasApiUIState.toEntity() = TareasDto(
     tareaId = tareaId ?: 0,
     descripcion = descripcion,
     nombre = nombre,

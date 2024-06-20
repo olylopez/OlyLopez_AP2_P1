@@ -11,7 +11,6 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import edu.ucne.olylopez_ap2_p1.data.local.database.ServicioDb
 import edu.ucne.olylopez_ap2_p1.data.remote.TareasApi
-import edu.ucne.olylopez_ap2_p1.data.remote.UsersApi
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import javax.inject.Singleton
