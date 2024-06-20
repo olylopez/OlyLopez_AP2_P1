@@ -42,9 +42,9 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun providesTareaApi(moshi: Moshi): TareasApi {
+    fun providesTareasApi(moshi: Moshi): TareasApi {
         return Retrofit.Builder()
-            .baseUrl("https://gestordomestico.somee.com/api/Tareas")
+            .baseUrl("https://gestordomestico.somee.com/")
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()
             .create(TareasApi::class.java)

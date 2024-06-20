@@ -15,4 +15,5 @@ import edu.ucne.olylopez_ap2_p1.data.local.entities.ServicioEntity
 )
 abstract class ServicioDb : RoomDatabase(){
     abstract fun servicioDao(): ServicioDao
+
 }

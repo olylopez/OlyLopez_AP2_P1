@@ -16,14 +16,26 @@ class ServicioViewModel(private val repository: ServicioRepository,
     var uiState = MutableStateFlow(ServicioUIState())
         private set
 
-
     val servicios = repository.getServicio()
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),
             initialValue = emptyList()
         )
-
+    init {
+        viewModelScope.launch {
+            val servicio = repository.getServicio(servicioId)
+            servicio?.let {
+                uiState.update {
+                    it.copy(
+                        servicioId = servicio.servicioId,
+                        descripcion = servicio.descripcion ?: "",
+                        precio = servicio.precio
+                    )
+                }
+            }
+        }
+    }
 
     fun deleteServicio(servicio: ServicioEntity) {
         viewModelScope.launch {
@@ -47,20 +59,7 @@ class ServicioViewModel(private val repository: ServicioRepository,
         }
     }
 
-    init {
-        viewModelScope.launch {
-            val servicio = repository.getServicio(servicioId)
-            servicio?.let {
-                uiState.update {
-                    it.copy(
-                        servicioId = servicio.servicioId,
-                        descripcion = servicio.descripcion ?: "",
-                        precio = servicio.precio
-                    )
-                }
-            }
-        }
-    }
+
 
 
     fun saveServicio() {
