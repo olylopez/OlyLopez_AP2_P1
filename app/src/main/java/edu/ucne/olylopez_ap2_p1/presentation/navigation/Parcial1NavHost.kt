@@ -6,6 +6,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
+import edu.ucne.olylopez_ap2_p1.data.remote.dto.TareasDto
 import edu.ucne.olylopez_ap2_p1.presentation.Api.ApiListScreen
 import edu.ucne.olylopez_ap2_p1.presentation.Servicio.ServicioListScreen
 import edu.ucne.olylopez_ap2_p1.presentation.Servicio.ServicioScreen
@@ -42,7 +43,8 @@ fun Parcial1NavHost(
         }
         composable<Screen.ApiList> {
             ApiListScreen(
-                navController = navHostController
+                navController = navHostController,
+
             )
         }
 
