@@ -35,7 +35,6 @@ fun Parcial1NavHost(
             )
         }
         composable<Screen.ServicioRegistro> {
-            val args = it.toRoute<Screen.ServicioRegistro>()
             ServicioScreen(
                 navController = navHostController
             )

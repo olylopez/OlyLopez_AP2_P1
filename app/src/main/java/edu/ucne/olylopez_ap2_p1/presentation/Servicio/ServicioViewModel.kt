@@ -2,6 +2,7 @@ package edu.ucne.olylopez_ap2_p1.presentation.Servicio
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import edu.ucne.olylopez_ap2_p1.data.local.entities.ServicioEntity
 import edu.ucne.olylopez_ap2_p1.repository.ServicioRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -9,10 +10,13 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class ServicioViewModel(private val repository: ServicioRepository,
-                           private val servicioId: Int) : ViewModel()
-{
+@HiltViewModel
+class ServicioViewModel @Inject constructor(
+    private val repository: ServicioRepository,
+    ) : ViewModel() {
+    private val servicioId: Int = 0
     var uiState = MutableStateFlow(ServicioUIState())
         private set
 

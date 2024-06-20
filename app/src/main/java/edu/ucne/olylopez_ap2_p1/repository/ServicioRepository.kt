@@ -2,8 +2,10 @@ package edu.ucne.olylopez_ap2_p1.repository
 
 import edu.ucne.olylopez_ap2_p1.data.local.dao.ServicioDao
 import edu.ucne.olylopez_ap2_p1.data.local.entities.ServicioEntity
+import javax.inject.Inject
 
-class ServicioRepository(private val servicioDao: ServicioDao) {
+class ServicioRepository @Inject constructor(
+    private val servicioDao: ServicioDao) {
     suspend fun saveServicio(servicio: ServicioEntity) = servicioDao.save(servicio)
     fun getServicio() = servicioDao.getAll()
     suspend fun getServicio(id: Int) = servicioDao.find(id)

@@ -8,9 +8,7 @@ import edu.ucne.olylopez_ap2_p1.repository.Resource
 import edu.ucne.olylopez_ap2_p1.repository.TareaRepository
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
