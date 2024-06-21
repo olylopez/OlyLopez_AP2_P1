@@ -1,5 +1,7 @@
 package edu.ucne.olylopez_ap2_p1.presentation.Api
 
+import android.util.Log
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,6 +12,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -44,7 +47,7 @@ fun ApiListScreen(
                     title = {
                         Text(text = "Lista Tareas API",
                             modifier = Modifier.fillMaxWidth(),
-                            textAlign = TextAlign.Center
+                            textAlign = TextAlign.Center,
                         )
                     }
                 )
@@ -56,8 +59,12 @@ fun ApiListScreen(
                     .padding(it)
                     .padding(8.dp)
             ) {
+
                 TareasListBory(
-                    tareas = uiState.tareas
+                    tareas = uiState.tareas,
+                    onList = { Log.d("ApiListScreen", "Fetching tasks from API")
+                        viewModel.getTareas()},
+                    uistate = uiState
                 )
             }
         }
@@ -66,7 +73,10 @@ fun ApiListScreen(
 
 @Composable
 fun TareasListBory(
-    tareas: List<TareasDto>)
+    tareas: List<TareasDto>,
+    onList: () -> Unit,
+    uistate: TareasApiUIState,
+)
 {
     Column(
         modifier = Modifier
@@ -78,34 +88,51 @@ fun TareasListBory(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Button(
-                onClick = {
-                }
+                onClick = { onList() }
             ) {
                 Icon(
                     imageVector = Icons.Default.PlayArrow,
-                    contentDescription = "new button"
+                    contentDescription = "load button"
                 )
                 Text("Cargar Datos(API)")
             }
+            if (uistate.isLoading) {
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+
+                ) {
+                    CircularProgressIndicator()
+                }
+            }
         }
     }
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
+    Column(
+        modifier = Modifier.fillMaxSize().padding(4.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        items(tareas) { tarea ->
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+     ) {
+         items(tareas) { tarea ->
+             Row(
+                   modifier = Modifier
+                       .fillMaxWidth()
+                       .padding(16.dp),
+                      verticalAlignment = Alignment.CenterVertically
+                ) {
                 Text(text = tarea.tareaId.toString(), modifier = Modifier.weight(0.10f))
+                Text(text = tarea.empleadoId.toString(), modifier = Modifier.weight(0.10f))
                 Text(text = tarea.descripcion, modifier = Modifier.weight(0.300f))
+                Text(text = tarea.fecha, modifier = Modifier.weight(0.300f))
                 Text(text = tarea.nombre, modifier = Modifier.weight(0.300f))
+                Text(text = tarea.estado, modifier = Modifier.weight(0.300f))
                 Text(text = tarea.codigoAcceso, modifier = Modifier.weight(0.300f))
             }
         }
+    }
     }
 }
 

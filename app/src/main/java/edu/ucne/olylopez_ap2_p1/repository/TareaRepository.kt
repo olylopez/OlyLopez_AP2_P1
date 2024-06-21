@@ -1,5 +1,6 @@
 package edu.ucne.olylopez_ap2_p1.repository
 
+import android.util.Log
 import edu.ucne.olylopez_ap2_p1.data.remote.TareasApi
 import edu.ucne.olylopez_ap2_p1.data.remote.dto.TareasDto
 import kotlinx.coroutines.flow.Flow
@@ -13,9 +14,11 @@ class TareaRepository @Inject constructor(
         emit(Resource.Loading())
         try {
             val tareas = tareasApi.getTareas()
+            Log.d("TareaRepository", "API response: $tareas")
             emit(Resource.Success(tareas))
         } catch (e: Exception) {
-            emit(Resource.Error(e.localizedMessage ?: "An unexpected error occured"))
+            Log.e("TareaRepository", "API call failed: ${e.localizedMessage}", e)
+            emit(Resource.Error(e.localizedMessage ?: "An unexpected error occurred"))
         }
     }
 }
