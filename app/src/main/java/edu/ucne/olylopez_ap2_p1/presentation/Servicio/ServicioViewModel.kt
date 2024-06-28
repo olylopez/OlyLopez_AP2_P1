@@ -89,6 +89,20 @@ class ServicioViewModel @Inject constructor(
             uiState.value = ServicioUIState()
         }
     }
+    fun onSetServicio(servivioId: Int) {
+        viewModelScope.launch {
+            val servicio = repository.getServicio(servivioId)
+            servicio?.let {
+                uiState.update {
+                    it.copy(
+                        servicioId = servicio.servicioId,
+                        descripcion = servicio.descripcion ?: "",
+                        precio = servicio.precio
+                    )
+                }
+            }
+        }
+    }
 }
 
 data class ServicioUIState(

@@ -8,6 +8,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import edu.ucne.olylopez_ap2_p1.data.remote.dto.TareasDto
 import edu.ucne.olylopez_ap2_p1.presentation.Api.ApiListScreen
+import edu.ucne.olylopez_ap2_p1.presentation.Api.ApiScreen
 import edu.ucne.olylopez_ap2_p1.presentation.Api.TareaApiViewModel
 import edu.ucne.olylopez_ap2_p1.presentation.Servicio.ServicioListScreen
 import edu.ucne.olylopez_ap2_p1.presentation.Servicio.ServicioScreen
@@ -35,13 +36,25 @@ fun Parcial1NavHost(
             )
         }
         composable<Screen.ServicioRegistro> {
+            val args = it.toRoute<Screen.ServicioRegistro>()
             ServicioScreen(
-                navController = navHostController
+                navController = navHostController,
+                servicioId = args.servicioId
             )
         }
         composable<Screen.ApiList> {
             ApiListScreen(
-                navController = navHostController)
+                navController = navHostController,
+                onAddTarea = {navHostController.navigate(Screen.Tarea(0))},
+                onVerServicio = {navHostController.navigate(Screen.Tarea(it.ticketId ?: 0))}
+                )
+        }
+        composable<Screen.Tarea> {
+            val args = it.toRoute<Screen.Tarea>()
+            ApiScreen(
+                navController = navHostController,
+                ticketId = args.tareaId
+            )
         }
 
     }

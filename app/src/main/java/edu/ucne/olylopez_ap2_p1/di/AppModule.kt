@@ -46,17 +46,10 @@ object AppModule {
     @Provides
     @Singleton
     fun providesTareasApi(moshi: Moshi): TareasApi {
-        val logging = HttpLoggingInterceptor { message -> Log.d("Retrofit", message) }
-        logging.setLevel(HttpLoggingInterceptor.Level.BODY)
-
-        val client = OkHttpClient.Builder()
-            .addInterceptor(logging)
-            .build()
 
         return Retrofit.Builder()
-            .baseUrl("https://gestordomestico.somee.com/")
+            .baseUrl("https://ap2ticket.azurewebsites.net/")
             .addConverterFactory(MoshiConverterFactory.create(moshi))
-            .client(client)
             .build()
             .create(TareasApi::class.java)
     }

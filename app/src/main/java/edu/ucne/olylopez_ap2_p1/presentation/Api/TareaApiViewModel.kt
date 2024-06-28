@@ -9,12 +9,11 @@ import edu.ucne.olylopez_ap2_p1.repository.Resource
 import edu.ucne.olylopez_ap2_p1.repository.TareaRepository
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
-import kotlin.math.log
 
 @HiltViewModel
 class TareaApiViewModel @Inject constructor(
@@ -28,48 +27,117 @@ class TareaApiViewModel @Inject constructor(
             getTareas()
         }
     }
-    fun getTareas() {
+
+    fun onSetTarea(tareaId: Int) {
         viewModelScope.launch {
-            try {
-                uiState.update { it.copy(isLoading = true) }
-                val result = repository.getTareas().first()
-                Log.d("TareaApiViewModel", "API call result: $result")
-                when (result) {
-                    is Resource.Loading -> Log.d("TareaApiViewModel", "Loading")
-                    is Resource.Success -> {
-                        Log.d("TareaApiViewModel", "Success: ${result.data}")
-                        uiState.update {
-                            it.copy(
-                                isLoading = false,
-                                tareas = result.data ?: emptyList()
-                            )
-                        }
-                    }
-                    is Resource.Error -> {
-                        Log.e("TareaApiViewModel", "Error: ${result.message}")
-                        uiState.update {
-                            it.copy(
-                                isLoading = false,
-                                errorMessage = result.message
-                            )
-                        }
-                    }
-                }
-            } catch (e: Exception) {
-                Log.e("TareaApiViewModel", "Exception: ${e.localizedMessage}", e)
+            val tarea = repository.getTarea(tareaId)
+            tarea?.let {
                 uiState.update {
                     it.copy(
-                        isLoading = false,
-                        errorMessage = e.localizedMessage
+                        ticketId = tarea.ticketId,
+                        descripcion = tarea.descripcion,
+                        fecha = tarea.fecha,
+                        precio = tarea.precio
                     )
                 }
             }
         }
     }
 
+    fun onDescripcionChanged(descripcion: String) {
+        uiState.update {
+            it.copy(descripcion = descripcion)
+        }
+    }
+    fun onFechaChanged(fecha: String) {
+        uiState.update {
+            it.copy(fecha = fecha)
+        }
+    }
+    fun onPrecioChanged(precio: String) {
+        val letras = Regex("[a-zA-Z ]+")
+        val numeros= precio.replace(letras, "").toDoubleOrNull()
+        uiState.update {
+            it.copy(precio = numeros)
+        }
+    }
+
+    init {
+        viewModelScope.launch {
+            val tarea = repository.getTarea(tareaId)
+            tarea?.let {
+                uiState.update {
+                    it.copy(
+                        ticketId = tarea.ticketId,
+                        descripcion = tarea.descripcion,
+                        fecha = tarea.fecha,
+                        precio = tarea.precio
+                    )
+                }
+            }
+        }
+    }
+
+    /*fun saveTarea(): Boolean {
+        viewModelScope.launch {
+            if(uiState.value.ticketId == null || uiState.value.ticketId == 0){
+                repository.saveTarea(uiState.value.toDTO())
+                uiState.value = TareasApiUIState()
+            }
+            else{
+                repository.updateTarea(uiState.value.toDTO())
+                uiState.value = TareasApiUIState()
+            }
+        }
+        return true
+    }*/
+    fun saveTarea() {
+        viewModelScope.launch {
+            try {
+                if (uiState.value.ticketId == null || uiState.value.ticketId == 0) {
+                    repository.saveTarea(uiState.value.toDTO())
+                } else {
+                    repository.updateTarea(uiState.value.toDTO())
+                }
+                uiState.value = TareasApiUIState()
+            } catch (e: Exception) {
+                Log.e("ViewModel", "Error saving/updating task: ${e.localizedMessage}")
+            }
+        }
+    }
+
+    fun newTicket() {
+        viewModelScope.launch {
+            uiState.value = TareasApiUIState()
+        }
+    }
+    fun deleteTicket(ticketId: Int) {
+        viewModelScope.launch {
+            try {
+                repository.deleteTarea(TareasDto(ticketId, "", "", 0.0))
+                getTareas()
+            } catch (e: Exception) {
+                Log.e("ViewModel", "Error deleting task: ${e.localizedMessage}")
+            }
+        }
+    }
+
+    fun validation(): Boolean {
+        uiState.value.descripcionError = uiState.value.descripcion.isEmpty()
+        uiState.value.precioError = (uiState.value.precio ?: 0.0) <= 0.0
+        uiState.update {
+            it.copy(
+                saveSuccess = !uiState.value.descripcionError &&
+                        !uiState.value.precioError
+            )
+        }
+        return uiState.value.saveSuccess
+    }
 
 
-    /*fun getTareas() {
+
+
+    fun getTareas() {
         viewModelScope.launch {
             repository.getTareas().collect { result ->
                 when (result) {
@@ -99,32 +167,26 @@ class TareaApiViewModel @Inject constructor(
                 }
             }
         }
-    }*/
+    }
 }
 
 data class TareasApiUIState(
-    val tareaId: Int? = null,
-    val empleadoId: Int? = null,
+    val ticketId: Int? = null,
     var descripcion: String = "",
+    var fecha: String = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd")),
+    var precio: Double? = null,
+    var saveSuccess: Boolean = false,
     var descripcionError: Boolean = false,
-    var fecha: String = "",
     var fechaError: Boolean = false,
-    var nombre: String = "",
-    var nombreError: Boolean = false,
-    var estado: String = "",
-    var estadoError: Boolean = false,
-    var codigoAcceso: String = "",
-    var codigoAccesoError: Boolean = false,
+    var precioError: Boolean = false,
     val tareas: List<TareasDto> = emptyList(),
     val isLoading: Boolean = false,
     val errorMessage: String? = null
 )
-fun TareasApiUIState.toEntity() = TareasDto(
-    tareaId = tareaId ?: 0,
-    empleadoId = empleadoId ?: 0,
+fun TareasApiUIState.toDTO() = TareasDto(
+    ticketId = ticketId ?: 0,
     descripcion = descripcion,
     fecha = fecha,
-    nombre = nombre,
-    estado = estado,
-    codigoAcceso = codigoAcceso,
+    precio = precio?: 0.0,
+
 )

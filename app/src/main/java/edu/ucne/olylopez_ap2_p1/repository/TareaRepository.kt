@@ -21,6 +21,42 @@ class TareaRepository @Inject constructor(
             emit(Resource.Error(e.localizedMessage ?: "An unexpected error occurred"))
         }
     }
+    suspend fun saveTarea(tarea: TareasDto){
+        try {
+            tareasApi.saveTarea(tarea)
+        }
+
+        catch (e: Exception){
+
+        }
+    }
+
+    suspend fun updateTarea(tarea: TareasDto){
+        try {
+            tareasApi.updateTarea(tarea.ticketId, tarea)
+        }
+
+        catch (e: Exception){
+
+        }
+    }
+    suspend fun deleteTarea(tarea: TareasDto){
+        try {
+            tareasApi.deleteTarea(tarea.ticketId)
+        }
+
+        catch (e: Exception){
+
+        }
+    }
+    suspend fun getTarea(id: Int): TareasDto? {
+        return try {
+            tareasApi.getTarea(id)
+        } catch (e: Exception) {
+            null
+        }
+    }
+
 }
 
 sealed class Resource<T>(val data: T? = null, val message: String? = null) {

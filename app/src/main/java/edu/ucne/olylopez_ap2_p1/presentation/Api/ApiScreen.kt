@@ -1,5 +1,6 @@
-package edu.ucne.olylopez_ap2_p1.presentation.Servicio
+package edu.ucne.olylopez_ap2_p1.presentation.Api
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -8,13 +9,16 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -27,33 +31,35 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import edu.ucne.olylopez_ap2_p1.presentation.Servicio.ServicioUIState
+import edu.ucne.olylopez_ap2_p1.presentation.Servicio.ServicioViewModel
 import edu.ucne.olylopez_ap2_p1.presentation.navigation.Screen
-
+import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ServicioScreen(
-    viewModel: ServicioViewModel = hiltViewModel(),
+fun ApiScreen(
+    viewModel: TareaApiViewModel = hiltViewModel(),
     navController: NavHostController,
-    servicioId: Int?
-){
+    ticketId: Int?
+) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     LaunchedEffect(key1 = true) {
-        viewModel.onSetServicio(servicioId?:0)
+        viewModel.onSetTarea(ticketId?:0)
     }
-    viewModel.servicios.collectAsStateWithLifecycle()
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
             TopAppBar(
                 title = {
                     Text(
-                        text = "Registro de Servicios",
+                        text = "Registro de la API",
                         modifier = Modifier.fillMaxWidth(),
                         textAlign = TextAlign.Center
                     )
@@ -67,12 +73,13 @@ fun ServicioScreen(
                 .padding(innerPadding)
                 .padding(4.dp)
         ) {
-            ServicioBory(
+            ApiBory(
                 uiState = uiState,
                 onDescripcionChanged = viewModel::onDescripcionChanged,
+                onFechaChanged = viewModel::onFechaChanged,
                 onPrecioChanged = viewModel::onPrecioChanged,
-                onSaveServicio = { viewModel.saveServicio() },
-                onNewServicio = { viewModel.newServicio() },
+                onSaveServicio = { viewModel.saveTarea() },
+                onNewServicio = { viewModel.newTicket() },
                 onValidation = viewModel::validation,
                 navController = navController
             )
@@ -80,17 +87,18 @@ fun ServicioScreen(
     }
 }
 
-
 @Composable
-fun ServicioBory(
-    uiState: ServicioUIState,
+fun ApiBory(
+    uiState: TareasApiUIState,
     onDescripcionChanged: (String) -> Unit,
+    onFechaChanged: (String) -> Unit,
     onPrecioChanged: (String) -> Unit,
     onSaveServicio: () -> Unit,
     onNewServicio: () -> Unit,
     onValidation: () -> Boolean,
     navController: NavHostController
 ){
+    var showDatePicker by remember { mutableStateOf(false) }
     var clienteVacio by remember { mutableStateOf(false) }
     var descripcionVacia by remember { mutableStateOf(false) }
     var totalInvalido by remember { mutableStateOf(false) }
@@ -137,11 +145,39 @@ fun ServicioBory(
                     Spacer(modifier = Modifier.height(16.dp))
 
                     OutlinedTextField(
+                        label = { Text(text = "Fecha") },
+                        value = uiState.fecha.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")),
+                        onValueChange = onFechaChanged,
+                        readOnly = true,
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        trailingIcon = {
+                            IconButton(
+                                onClick = {
+                                    showDatePicker = true
+                                }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.DateRange,
+                                    contentDescription = "Date Picker"
+                                )
+                            }
+                        },
+                        modifier = Modifier.fillMaxWidth()
+
+                            .clickable(enabled = true) {
+                                showDatePicker = true
+                            }
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    OutlinedTextField(
                         label = { Text(text = "Total") },
                         value = uiState.precio?.toString() ?: "",
                         onValueChange = {
                             onPrecioChanged(it)
-                            totalInvalido = it.isEmpty() || it.toDoubleOrNull() == null || it.toDouble() <= 0
+                            totalInvalido =
+                                it.isEmpty() || it.toDoubleOrNull() == null || it.toDouble() <= 0
                         },
                         isError = totalInvalido,
                         modifier = Modifier.fillMaxWidth()
@@ -184,7 +220,7 @@ fun ServicioBory(
                                     clienteVacio = false
                                     descripcionVacia = false
                                     totalInvalido = false
-                                    navController.navigate(Screen.ServicioList)
+                                    navController.navigate(Screen.ApiList)
                                 } else {
                                     errorGuardar = true
                                     descripcionVacia = uiState.descripcionError
@@ -195,11 +231,6 @@ fun ServicioBory(
                         ) {
                             Icon(imageVector = Icons.Default.Person, contentDescription = "save")
                             Text(text = "Guardar")
-                            /*Icon(
-                                imageVector = Icons.Default.Person,
-                                contentD1escription = "save button"
-                            )
-                            Text("Guardar")*/
                         }
                     }
                 }
